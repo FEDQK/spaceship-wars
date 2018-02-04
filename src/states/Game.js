@@ -3,10 +3,19 @@ import Phaser from 'phaser'
 import Mushroom from '../sprites/Mushroom'
 
 export default class extends Phaser.State {
-  init () {}
+  init () {
+    this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
+    this.game.physics.startSystem(Phaser.Physics.ARCADE)
+
+    this.PLAYER_SPEED = 200
+    this.BULLET_SPEED = -1000
+  }
   preload () {}
 
   create () {
+    this.background = this.add.tileSprite(0, 0, this.game.world.width, this.game.world.height, 'space')
+    this.background.autoScroll(0, 30)
+
     const bannerText = 'Phaser + ES6 + Webpack'
     let banner = this.add.text(this.world.centerX, this.game.height - 80, bannerText, {
       font: '40px Bangers',
