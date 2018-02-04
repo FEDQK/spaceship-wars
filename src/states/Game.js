@@ -26,18 +26,8 @@ export default class extends Phaser.State {
 
     this.initBullets()
     this.shootingTimer = this.game.time.events.loop(Phaser.Timer.SECOND / 5, this.createPlayerBullet, this)
+    this.initEnemies()
 
-    let enemy = new Enemy({
-      game: this.game,
-      x: 100,
-      y: 100,
-      asset: 'enemy1',
-      health: 10,
-      enemyBullets: []
-    })
-    this.game.add.existing(enemy)
-    enemy.body.velocity.x = 100
-    enemy.body.velocity.y = 50
     // const bannerText = 'Phaser + ES6 + Webpack'
     // let banner = this.add.text(this.world.centerX, this.game.height - 80, bannerText, {
     //   font: '40px Bangers',
@@ -59,6 +49,8 @@ export default class extends Phaser.State {
   }
 
   update () {
+    this.game.physics.arcade.overlap(this.playerBullets, this.enemies, this.damageEnemy, null, this)
+
     this.player.body.velocity.x = 0
 
     if (this.game.input.activePointer.isDown) {
@@ -93,5 +85,26 @@ export default class extends Phaser.State {
       bullet.reset(this.player.x, this.player.top)
     }
     bullet.body.velocity.y = this.BULLET_SPEED
+  }
+
+  initEnemies () {
+    this.enemies = this.add.group()
+    this.enemies.enableBody = true
+    let enemy = new Enemy({
+      game: this.game,
+      x: 100,
+      y: 100,
+      asset: 'enemy1',
+      health: 10,
+      enemyBullets: []
+    })
+    this.enemies.add(enemy)
+    enemy.body.velocity.x = 100
+    enemy.body.velocity.y = 50
+  }
+
+  damageEnemy (bullet, enemy) {
+    enemy.damage(1)
+    bullet.kill()
   }
 }

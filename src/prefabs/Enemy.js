@@ -4,7 +4,7 @@ export default class extends Phaser.Sprite {
   constructor ({ game, x, y, asset, health, enemyBullets }) {
     super(game, x, y, asset)
     this.game = game
-    this.game.physics.arcade.enable(this)
+    // this.game.physics.arcade.enable(this)
 
     this.anchor.setTo(0.5)
     this.animations.add('getHit', [0, 1, 2, 1, 0], 25, false)
@@ -24,5 +24,10 @@ export default class extends Phaser.Sprite {
     if (this.top > this.game.world.height) {
       this.kill()
     }
+  }
+
+  damage (amount) {
+    super.damage(amount)
+    this.play('getHit')
   }
 }
