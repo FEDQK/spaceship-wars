@@ -1,6 +1,7 @@
 /* globals __DEV__ */
 import Phaser from 'phaser'
 import PlayerBullet from '../prefabs/PlayerBullet'
+import Enemy from '../prefabs/Enemy'
 import Mushroom from '../sprites/Mushroom'
 
 export default class extends Phaser.State {
@@ -26,7 +27,17 @@ export default class extends Phaser.State {
     this.initBullets()
     this.shootingTimer = this.game.time.events.loop(Phaser.Timer.SECOND / 5, this.createPlayerBullet, this)
 
-
+    let enemy = new Enemy({
+      game: this.game,
+      x: 100,
+      y: 100,
+      asset: 'enemy1',
+      health: 10,
+      enemyBullets: []
+    })
+    this.game.add.existing(enemy)
+    enemy.body.velocity.x = 100
+    enemy.body.velocity.y = 50
     // const bannerText = 'Phaser + ES6 + Webpack'
     // let banner = this.add.text(this.world.centerX, this.game.height - 80, bannerText, {
     //   font: '40px Bangers',
