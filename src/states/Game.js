@@ -1,5 +1,6 @@
 /* globals __DEV__ */
 import Phaser from 'phaser'
+import PlayerBullet from '../prefabs/PlayerBullet'
 import Mushroom from '../sprites/Mushroom'
 
 export default class extends Phaser.State {
@@ -21,6 +22,9 @@ export default class extends Phaser.State {
     this.player.anchor.setTo(0.5)
     this.game.physics.arcade.enable(this.player)
     this.player.body.collideWorldBounds = true
+
+    this.initBullets()
+    this.shootingTimer = this.game.time.events.loop(Phaser.Timer.SECOND / 5, this.createPlayerBullet, this)
 
 
     // const bannerText = 'Phaser + ES6 + Webpack'
@@ -46,7 +50,7 @@ export default class extends Phaser.State {
   update () {
     this.player.body.velocity.x = 0
 
-    if(this.game.input.activePointer.isDown) {
+    if (this.game.input.activePointer.isDown) {
       let targetX = this.game.input.activePointer.position.x
       let direction = targetX >= this.game.world.centerX ? 1 : -1
       this.player.body.velocity.x = direction * this.PLAYER_SPEED
@@ -57,5 +61,26 @@ export default class extends Phaser.State {
     // if (__DEV__) {
     //   this.game.debug.spriteInfo(this.mushroom, 32, 32)
     // }
+  }
+
+  initBullets () {
+    this.playerBullets = this.add.group()
+    this.playerBullets.enableBody = true
+  }
+
+  createPlayerBullet () {
+    let bullet = this.playerBullets.getFirstExists(false)
+    if (!bullet) {
+      bullet = new PlayerBullet({
+        game: this.game,
+        x: this.player.x,
+        y: this.player.top,
+        asset: 'bullet'
+      })
+      this.playerBullets.add(bullet)
+    } else {
+      bullet.reset(this.player.x, this.player.top)
+    }
+    bullet.body.velocity.y = this.BULLET_SPEED
   }
 }
