@@ -1,7 +1,6 @@
 /* globals __DEV__ */
 import Phaser from 'phaser'
 import PlayerBullet from '../prefabs/PlayerBullet'
-import EnemyBullet from '../prefabs/EnemyBullet'
 import Enemy from '../prefabs/Enemy'
 import Mushroom from '../sprites/Mushroom'
 

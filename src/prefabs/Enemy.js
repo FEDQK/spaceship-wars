@@ -47,8 +47,10 @@ export default class extends Phaser.Sprite {
   }
 
   scheduleShooting () {
-    this.shoot()
-    this.enemyTimer.add(Phaser.Timer.SECOND * 2, this.scheduleShooting, this)
+    if (this.health > 0) {
+      this.shoot()
+      this.enemyTimer.add(Phaser.Timer.SECOND * 2, this.scheduleShooting, this)
+    }
   }
 
   shoot () {
@@ -65,5 +67,13 @@ export default class extends Phaser.Sprite {
       bullet.reset(this.x, this.y)
     }
     bullet.body.velocity.y = this.BULLET_SPEED
+  }
+
+  reset (x, y, health, key, scale, speedX, speedY) {
+    super.reset(x, y, health)
+    this.loadTexture(key)
+    this.scale.setTo(scale)
+    this.body.velocity.x = speedX
+    this.body.velocity.y = speedY
   }
 }
