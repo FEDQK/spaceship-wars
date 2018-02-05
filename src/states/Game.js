@@ -1,6 +1,7 @@
 /* globals __DEV__ */
 import Phaser from 'phaser'
 import PlayerBullet from '../prefabs/PlayerBullet'
+import EnemyBullet from '../prefabs/EnemyBullet'
 import Enemy from '../prefabs/Enemy'
 import Mushroom from '../sprites/Mushroom'
 
@@ -50,6 +51,7 @@ export default class extends Phaser.State {
 
   update () {
     this.game.physics.arcade.overlap(this.playerBullets, this.enemies, this.damageEnemy, null, this)
+    this.game.physics.arcade.overlap(this.enemyBullets, this.player, this.killPlayer, null, this)
 
     this.player.body.velocity.x = 0
 
@@ -90,13 +92,17 @@ export default class extends Phaser.State {
   initEnemies () {
     this.enemies = this.add.group()
     this.enemies.enableBody = true
+
+    this.enemyBullets = this.add.group()
+    this.enemyBullets.enableBody = true
+
     let enemy = new Enemy({
       game: this.game,
       x: 100,
       y: 100,
       asset: 'enemy1',
       health: 10,
-      enemyBullets: []
+      enemyBullets: this.enemyBullets
     })
     this.enemies.add(enemy)
     enemy.body.velocity.x = 100
@@ -106,5 +112,10 @@ export default class extends Phaser.State {
   damageEnemy (bullet, enemy) {
     enemy.damage(1)
     bullet.kill()
+  }
+
+  killPlayer () {
+    this.player.kill()
+    this.game.state.start('Game')
   }
 }

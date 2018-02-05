@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import EnemyBullet from '../prefabs/EnemyBullet'
 
 export default class extends Phaser.Sprite {
   constructor ({ game, x, y, asset, health, enemyBullets }) {
@@ -9,7 +10,12 @@ export default class extends Phaser.Sprite {
     this.anchor.setTo(0.5)
     this.animations.add('getHit', [0, 1, 2, 1, 0], 25, false)
     this.health = health
+
+    this.BULLET_SPEED = 100
     this.enemyBullets = enemyBullets
+    this.enemyTimer = this.game.time.create(false)
+    this.enemyTimer.start()
+    this.scheduleShooting()
   }
 
   update () {
@@ -38,5 +44,26 @@ export default class extends Phaser.Sprite {
       emitter.gravity = 0
       emitter.start(true, 500, null, 100)
     }
+  }
+
+  scheduleShooting () {
+    this.shoot()
+    this.enemyTimer.add(Phaser.Timer.SECOND * 2, this.scheduleShooting, this)
+  }
+
+  shoot () {
+    let bullet = this.enemyBullets.getFirstExists(false)
+    if (!bullet) {
+      bullet = new EnemyBullet({
+        game: this.game,
+        x: this.x,
+        y: this.bottom,
+        asset: 'bullet'
+      })
+      this.enemyBullets.add(bullet)
+    } else {
+      bullet.reset(this.x, this.y)
+    }
+    bullet.body.velocity.y = this.BULLET_SPEED
   }
 }
