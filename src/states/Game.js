@@ -94,18 +94,7 @@ export default class extends Phaser.State {
 
     this.enemyBullets = this.add.group()
     this.enemyBullets.enableBody = true
-
-    let enemy = new Enemy({
-      game: this.game,
-      x: 100,
-      y: 100,
-      asset: 'enemy1',
-      health: 10,
-      enemyBullets: this.enemyBullets
-    })
-    this.enemies.add(enemy)
-    enemy.body.velocity.x = 100
-    enemy.body.velocity.y = 50
+    this.createEnemy(100, 100, 10, 'enemy1', 1, 100, 50)
   }
 
   damageEnemy (bullet, enemy) {
@@ -116,5 +105,21 @@ export default class extends Phaser.State {
   killPlayer () {
     this.player.kill()
     this.game.state.start('Game')
+  }
+
+  createEnemy (x, y, health, key, scale, speedX, speedY) {
+    let enemy = this.enemies.getFirstExists(false)
+    if (!enemy) {
+      enemy = new Enemy({
+        game: this.game,
+        x: x,
+        y: y,
+        asset: key,
+        health: health,
+        enemyBullets: this.enemyBullets
+      })
+      this.enemies.add(enemy)
+    }
+    enemy.reset(x, y, health, key, scale, speedX, speedY)
   }
 }
