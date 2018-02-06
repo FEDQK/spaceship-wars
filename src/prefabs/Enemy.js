@@ -43,14 +43,14 @@ export default class extends Phaser.Sprite {
       emitter.maxParticleSpeed.setTo(200, 200)
       emitter.gravity = 0
       emitter.start(true, 500, null, 100)
+
+      this.enemyTimer.pause()
     }
   }
 
   scheduleShooting () {
-    if (this.health > 0) {
-      this.shoot()
-      this.enemyTimer.add(Phaser.Timer.SECOND * 2, this.scheduleShooting, this)
-    }
+    this.shoot()
+    this.enemyTimer.add(Phaser.Timer.SECOND * 2, this.scheduleShooting, this)
   }
 
   shoot () {
@@ -75,5 +75,6 @@ export default class extends Phaser.Sprite {
     this.scale.setTo(scale)
     this.body.velocity.x = speedX
     this.body.velocity.y = speedY
+    this.enemyTimer.resume()
   }
 }
