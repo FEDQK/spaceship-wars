@@ -28,6 +28,8 @@ export default class extends Phaser.State {
     this.shootingTimer = this.game.time.events.loop(Phaser.Timer.SECOND / 5, this.createPlayerBullet, this)
     this.initEnemies()
 
+    this.loadLevel()
+
     // const bannerText = 'Phaser + ES6 + Webpack'
     // let banner = this.add.text(this.world.centerX, this.game.height - 80, bannerText, {
     //   font: '40px Bangers',
@@ -121,5 +123,70 @@ export default class extends Phaser.State {
       this.enemies.add(enemy)
     }
     enemy.reset(x, y, health, key, scale, speedX, speedY)
+  }
+
+  loadLevel () {
+    this.currentEnemyIndex = 0
+    this.levelData = {
+      'duration': 35,
+      'enemies': [
+        {
+          'time': 1,
+          'x': 0.05,
+          'health': 10,
+          'speedX': 20,
+          'speedY': 50,
+          'key': 'enemy1',
+          'scale': 3
+        },
+        {
+          'time': 3,
+          'x': 0.1,
+          'health': 5,
+          'speedX': 50,
+          'speedY': 50,
+          'key': 'enemy2',
+          'scale': 1
+        },
+        {
+          'time': 5,
+          'x': 0.1,
+          'health': 5,
+          'speedX': 50,
+          'speedY': 50,
+          'key': 'enemy3',
+          'scale': 1
+        },
+        {
+          'time': 7,
+          'x': 0.1,
+          'health': 5,
+          'speedX': 50,
+          'speedY': 50,
+          'key': 'enemy4',
+          'scale': 1
+        }
+      ]
+    }
+    this.scheduleNextEnemy()
+  }
+
+  scheduleNextEnemy () {
+    let nextEnemy = this.levelData.enemies[this.currentEnemyIndex]
+    if (nextEnemy) {
+      let nextTime = 1000 * (nextEnemy.time - (this.currentEnemyIndex === 0 ? 0 : this.levelData.enemies[this.currentEnemyIndex - 1].time))
+      this.nextEnemyTime = this.game.time.events.add(nextTime, function () {
+        this.createEnemy(
+          nextEnemy.x * this.game.world.width,
+          -150,
+          nextEnemy.health,
+          nextEnemy.key,
+          nextEnemy.scale,
+          nextEnemy.speedX,
+          nextEnemy.speedY)
+        this.currentEnemyIndex++
+        this.scheduleNextEnemy()
+      }, this)
+    }
   }
 }
