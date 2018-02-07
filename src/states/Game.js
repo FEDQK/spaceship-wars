@@ -33,6 +33,11 @@ export default class extends Phaser.State {
     this.initEnemies()
 
     this.loadLevel()
+    this.zap = this.add.audio('zap')
+    this.lose = this.add.audio('lose')
+    this.music = this.add.audio('music')
+    this.music.volume = this.zap.volume = 0.1
+    this.music.play()
 
     // const bannerText = 'Phaser + ES6 + Webpack'
     // let banner = this.add.text(this.world.centerX, this.game.height - 80, bannerText, {
@@ -103,12 +108,15 @@ export default class extends Phaser.State {
   }
 
   damageEnemy (bullet, enemy) {
+    this.zap.play()
     enemy.damage(1)
     bullet.kill()
   }
 
   killPlayer () {
     this.player.kill()
+    this.lose.play()
+    this.music.stop()
     this.game.state.start('Game')
   }
 
@@ -132,6 +140,7 @@ export default class extends Phaser.State {
     this.currentEnemyIndex = 0
     this.levelData = JSON.parse(this.game.cache.getText('level' + this.currentLevel))
     this.endOfLevelTimer = this.game.time.events.add(this.levelData.duration * 1000, function functionName () {
+      this.music.stop()
       console.log('level ended')
       if (this.currentLevel < this.numLevels) {
         this.currentLevel++

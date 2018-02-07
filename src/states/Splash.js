@@ -25,6 +25,9 @@ export default class extends Phaser.State {
     this.load.text('level1', 'assets/data/level1.json')
     this.load.text('level2', 'assets/data/level2.json')
     this.load.text('level3', 'assets/data/level3.json')
+    this.load.audio('music', ['assets/audio/Chameleon-Dream_Awakening.mp3', 'assets/audio/Chameleon-Dream_Awakening.ogg'])
+    this.load.audio('zap', 'assets/audio/zap.ogg')
+    this.load.audio('lose', 'assets/audio/lose.ogg')
   }
 
   create () {
