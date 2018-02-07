@@ -5,12 +5,16 @@ import Enemy from '../prefabs/Enemy'
 import Mushroom from '../sprites/Mushroom'
 
 export default class extends Phaser.State {
-  init () {
+  init (currentLevel) {
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
     this.game.physics.startSystem(Phaser.Physics.ARCADE)
 
     this.PLAYER_SPEED = 200
     this.BULLET_SPEED = -1000
+
+    this.numLevels = 3
+    this.currentLevel = currentLevel || 1
+    console.log("current level - " + this.currentLevel)
   }
   preload () {}
 
@@ -128,7 +132,7 @@ export default class extends Phaser.State {
   loadLevel () {
     this.currentEnemyIndex = 0
     this.levelData = {
-      'duration': 35,
+      'duration': 5,
       'enemies': [
         {
           'time': 1,
@@ -168,6 +172,15 @@ export default class extends Phaser.State {
         }
       ]
     }
+    this.endOfLevelTimer = this.game.time.events.add(this.levelData.duration * 1000, function functionName () {
+      console.log('level ended')
+      if (this.currentLevel < this.numLevels) {
+        this.currentLevel++
+      } else {
+        this.currentLevel = 1
+      }
+      this.game.state.start('Game', true, false, this.currentLevel)
+    }, this)
     this.scheduleNextEnemy()
   }
 
