@@ -37,7 +37,9 @@ export default class extends Phaser.State {
     this.lose = this.add.audio('lose')
     this.music = this.add.audio('music')
     this.music.volume = this.zap.volume = 0.1
-    this.music.play()
+    if (!this.music.isPlaying) {
+      this.music.play()
+    }
 
     // const bannerText = 'Phaser + ES6 + Webpack'
     // let banner = this.add.text(this.world.centerX, this.game.height - 80, bannerText, {
@@ -62,6 +64,7 @@ export default class extends Phaser.State {
   update () {
     this.game.physics.arcade.overlap(this.playerBullets, this.enemies, this.damageEnemy, null, this)
     this.game.physics.arcade.overlap(this.enemyBullets, this.player, this.killPlayer, null, this)
+    this.game.physics.arcade.overlap(this.enemies, this.player, this.killPlayer, null, this)
 
     this.player.body.velocity.x = 0
 
@@ -116,12 +119,12 @@ export default class extends Phaser.State {
   killPlayer () {
     this.player.kill()
     this.lose.play()
-    this.music.stop()
     this.game.state.start('Game')
   }
 
-  createEnemy (x, y, health, key, scale, speedX, speedY) {
+  createEnemy (_x, y, health, key, scale, speedX, speedY) {
     let enemy = this.enemies.getFirstExists(false)
+    let x = this.getRandom(0, this.game.world.width)
     if (!enemy) {
       enemy = new Enemy({
         game: this.game,
@@ -140,7 +143,6 @@ export default class extends Phaser.State {
     this.currentEnemyIndex = 0
     this.levelData = JSON.parse(this.game.cache.getText('level' + this.currentLevel))
     this.endOfLevelTimer = this.game.time.events.add(this.levelData.duration * 1000, function functionName () {
-      this.music.stop()
       console.log('level ended')
       if (this.currentLevel < this.numLevels) {
         this.currentLevel++
@@ -169,5 +171,9 @@ export default class extends Phaser.State {
         this.scheduleNextEnemy()
       }, this)
     }
+  }
+
+  getRandom (min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min
   }
 }
