@@ -14,7 +14,7 @@ export default class extends Phaser.State {
 
     this.numLevels = 3
     this.currentLevel = currentLevel || 1
-    console.log("current level - " + this.currentLevel)
+    console.log('current level - ' + this.currentLevel)
   }
   preload () {}
 
@@ -100,7 +100,6 @@ export default class extends Phaser.State {
 
     this.enemyBullets = this.add.group()
     this.enemyBullets.enableBody = true
-    this.createEnemy(100, 100, 10, 'enemy1', 1, 100, 50)
   }
 
   damageEnemy (bullet, enemy) {
@@ -131,47 +130,7 @@ export default class extends Phaser.State {
 
   loadLevel () {
     this.currentEnemyIndex = 0
-    this.levelData = {
-      'duration': 5,
-      'enemies': [
-        {
-          'time': 1,
-          'x': 0.05,
-          'health': 10,
-          'speedX': 20,
-          'speedY': 50,
-          'key': 'enemy1',
-          'scale': 3
-        },
-        {
-          'time': 3,
-          'x': 0.1,
-          'health': 5,
-          'speedX': 50,
-          'speedY': 50,
-          'key': 'enemy2',
-          'scale': 1
-        },
-        {
-          'time': 5,
-          'x': 0.1,
-          'health': 5,
-          'speedX': 50,
-          'speedY': 50,
-          'key': 'enemy3',
-          'scale': 1
-        },
-        {
-          'time': 7,
-          'x': 0.1,
-          'health': 5,
-          'speedX': 50,
-          'speedY': 50,
-          'key': 'enemy4',
-          'scale': 1
-        }
-      ]
-    }
+    this.levelData = JSON.parse(this.game.cache.getText('level' + this.currentLevel))
     this.endOfLevelTimer = this.game.time.events.add(this.levelData.duration * 1000, function functionName () {
       console.log('level ended')
       if (this.currentLevel < this.numLevels) {

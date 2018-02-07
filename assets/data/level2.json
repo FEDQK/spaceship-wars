@@ -1,0 +1,41 @@
+{
+  "duration": 35,
+  "enemies": [
+    {
+      "time": 1,
+      "x": 0.05,
+      "health": 15,
+      "speedX": 20,
+      "speedY": 50,
+      "key": "enemy3",
+      "scale": 3
+    },
+    {
+      "time": 3,
+      "x": 0.1,
+      "health": 10,
+      "speedX": 50,
+      "speedY": 50,
+      "key": "enemy3",
+      "scale": 1
+    },
+    {
+      "time": 5,
+      "x": 0.1,
+      "health": 10,
+      "speedX": 50,
+      "speedY": 50,
+      "key": "enemy2",
+      "scale": 1
+    },
+    {
+      "time": 7,
+      "x": 0.1,
+      "health": 10,
+      "speedX": 50,
+      "speedY": 50,
+      "key": "enemy4",
+      "scale": 1
+    }
+  ]
+}

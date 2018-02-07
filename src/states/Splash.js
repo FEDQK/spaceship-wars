@@ -22,6 +22,9 @@ export default class extends Phaser.State {
     this.load.spritesheet('enemy2', 'assets/images/enemy2.png', 104, 84, 3)
     this.load.spritesheet('enemy3', 'assets/images/enemy3.png', 103, 84, 3)
     this.load.spritesheet('enemy4', 'assets/images/enemy4.png', 82, 84, 3)
+    this.load.text('level1', 'assets/data/level1.json')
+    this.load.text('level2', 'assets/data/level2.json')
+    this.load.text('level3', 'assets/data/level3.json')
   }
 
   create () {
