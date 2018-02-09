@@ -2,9 +2,13 @@ import Phaser from 'phaser'
 import EnemyBullet from '../prefabs/EnemyBullet'
 
 export default class extends Phaser.Sprite {
-  constructor ({ game, x, y, asset, health, enemyBullets }) {
+  constructor ({ game, x, y, scale, asset, health, enemyBullets }) {
     super(game, x, y, asset)
     this.game = game
+    this.game.physics.p2.enable(this, true)
+    this.body.clearShapes()
+    this.scale.setTo(scale)
+    this.body.loadPolygon('physicsData', asset, scale)
     // this.game.physics.arcade.enable(this)
 
     this.anchor.setTo(0.5)
@@ -72,7 +76,7 @@ export default class extends Phaser.Sprite {
   reset (x, y, health, key, scale, speedX, speedY) {
     super.reset(x, y, health)
     this.loadTexture(key)
-    this.scale.setTo(scale)
+    // this.scale.setTo(scale)
     this.body.velocity.x = speedX
     this.body.velocity.y = speedY
     this.enemyTimer.resume()

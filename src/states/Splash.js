@@ -28,6 +28,7 @@ export default class extends Phaser.State {
     this.load.audio('music', ['assets/audio/Chameleon-Dream_Awakening.mp3', 'assets/audio/Chameleon-Dream_Awakening.ogg'])
     this.load.audio('zap', 'assets/audio/zap.ogg')
     this.load.audio('lose', 'assets/audio/lose.ogg')
+    this.load.physics('physicsData', 'assets/physics/sprites.json')
   }
 
   create () {
