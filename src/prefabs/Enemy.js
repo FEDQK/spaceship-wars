@@ -6,6 +6,7 @@ export default class extends Phaser.Sprite {
     super(game, x, y, asset)
     this.game = game
     this.game.physics.p2.enable(this, true)
+    this.body.static = true
     this.body.clearShapes()
     this.scale.setTo(scale)
     this.body.loadPolygon('physicsData', asset, scale)
@@ -58,7 +59,8 @@ export default class extends Phaser.Sprite {
   }
 
   shoot () {
-    let bullet = this.enemyBullets.getFirstExists(false)
+    // let bullet = this.enemyBullets.getFirstExists(false)
+    let bullet = this.enemyBullets.getFirstDead()
     if (!bullet) {
       bullet = new EnemyBullet({
         game: this.game,

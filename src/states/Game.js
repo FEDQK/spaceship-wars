@@ -26,6 +26,7 @@ export default class extends Phaser.State {
     this.game.physics.p2.enable(this.player, true)
     this.player.scale.setTo(0.6)
     this.player.anchor.setTo(0.5)
+    this.player.body.static = true
     this.player.body.clearShapes()
     this.player.body.loadPolygon('physicsData', 'player', 0.6)
     this.player.body.collideWorldBounds = true
@@ -89,7 +90,8 @@ export default class extends Phaser.State {
   }
 
   createPlayerBullet () {
-    let bullet = this.playerBullets.getFirstExists(false)
+    // let bullet = this.playerBullets.getFirstExists(false)
+    let bullet = this.playerBullets.getFirstDead()
     if (!bullet) {
       bullet = new PlayerBullet({
         game: this.game,
