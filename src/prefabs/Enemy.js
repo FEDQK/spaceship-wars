@@ -64,7 +64,7 @@ export default class extends Phaser.Sprite {
       })
       this.enemyBullets.add(bullet)
     } else {
-      bullet.reset(this.x, this.y)
+      bullet.reset(this.x, this.bottom)
     }
     bullet.body.velocity.y = this.BULLET_SPEED
   }

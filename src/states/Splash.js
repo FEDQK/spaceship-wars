@@ -18,16 +18,20 @@ export default class extends Phaser.State {
     this.load.image('player', 'assets/images/player.png')
     this.load.image('bullet', 'assets/images/bullet.png')
     this.load.image('enemyParticle', 'assets/images/enemyParticle.png')
+    this.load.image('bonusShield', 'assets/images/bonus-shield.png')
     this.load.spritesheet('enemy1', 'assets/images/enemy1.png', 93, 84, 3)
     this.load.spritesheet('enemy2', 'assets/images/enemy2.png', 104, 84, 3)
     this.load.spritesheet('enemy3', 'assets/images/enemy3.png', 103, 84, 3)
     this.load.spritesheet('enemy4', 'assets/images/enemy4.png', 82, 84, 3)
+    this.load.spritesheet('shield', 'assets/images/shield.png', 144, 137, 3)
     this.load.text('level1', 'assets/data/level1.json')
     this.load.text('level2', 'assets/data/level2.json')
     this.load.text('level3', 'assets/data/level3.json')
     this.load.audio('music', ['assets/audio/Chameleon-Dream_Awakening.mp3', 'assets/audio/Chameleon-Dream_Awakening.ogg'])
     this.load.audio('zap', 'assets/audio/zap.ogg')
     this.load.audio('lose', 'assets/audio/lose.ogg')
+    this.load.audio('shieldUp', 'assets/audio/shieldUp.ogg')
+    this.load.audio('shieldDown', 'assets/audio/shieldDown.ogg')
   }
 
   create () {
