@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+const BONUS_ITEM_SPEED = 100
 
 export default class extends Phaser.Sprite {
   constructor ({ game, x, y, asset, type }) {
@@ -8,7 +9,6 @@ export default class extends Phaser.Sprite {
     this.scale.setTo(0.7)
     this.checkWorldBounds = true
     this.outOfBoundsKill = true
-    this.BONUS_ITEM_SPEED = 100
-    this.body.velocity.setTo(0, this.BONUS_ITEM_SPEED)
+    this.body.velocity.setTo(0, BONUS_ITEM_SPEED)
   }
 }

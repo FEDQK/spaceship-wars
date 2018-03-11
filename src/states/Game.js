@@ -3,6 +3,7 @@ import Phaser from 'phaser'
 import PlayerBullet from '../prefabs/PlayerBullet'
 import Enemy from '../prefabs/Enemy'
 import BonusItem from '../prefabs/BonusItem'
+import Shield from '../prefabs/bonusItems/Shield'
 import Mushroom from '../sprites/Mushroom'
 
 export default class extends Phaser.State {
@@ -36,17 +37,17 @@ export default class extends Phaser.State {
 
     this.loadLevel()
     this.zap = this.add.audio('zap')
-    this.shieldUp = this.add.audio('shieldUp')
-    this.shieldDown = this.add.audio('shieldDown')
     this.lose = this.add.audio('lose')
     this.music = this.add.audio('music')
+    this.shieldUp = this.add.audio('shieldUp')
+    this.shieldDown = this.add.audio('shieldDown')
     this.music.volume = this.zap.volume = this.shieldUp.volume = this.shieldDown.volume = 0.1
     if (!this.music.isPlaying) {
       this.music.play()
     }
     // this.createShield()
     this.initBonusItems()
-    this.createBonusItem(200, 200)
+    this.createBonusItem(300, 700)
     // const bannerText = 'Phaser + ES6 + Webpack'
     // let banner = this.add.text(this.world.centerX, this.game.height - 80, bannerText, {
     //   font: '40px Bangers',
@@ -121,23 +122,19 @@ export default class extends Phaser.State {
   }
 
   createBonusItem (x, y) {
-    let bonusShield = new BonusItem({
+    let bonusItem = new BonusItem({
       game: this.game,
       x: x,
       y: y,
       asset: 'bonusShield'
     })
-    this.bonusItems.add(bonusShield)
+    this.bonusItems.add(bonusItem)
   }
 
   createShield () {
     this.player.customParams.shield = true
     this.shieldUp.play()
-    this.shield = this.add.sprite(this.player.x, this.player.y, 'shield')
-    this.shield.animations.add('createShield', [0, 1, 2], 8, false)
-    this.shield.scale.setTo(0.6)
-    this.shield.anchor.setTo(0.5)
-    this.shield.play('createShield')
+    this.shield = new Shield(this.game, this.player.x, this.player.y, 'shield')
   }
 
   initEnemies () {
