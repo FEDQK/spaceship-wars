@@ -3,6 +3,7 @@ import Phaser from 'phaser'
 import PlayerBullet from '../prefabs/PlayerBullet'
 import Enemy from '../prefabs/Enemy'
 import BonusItem from '../prefabs/BonusItem'
+import Player from '../prefabs/Player'
 import Shield from '../prefabs/bonusItems/Shield'
 import Mushroom from '../sprites/Mushroom'
 
@@ -11,7 +12,6 @@ export default class extends Phaser.State {
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
     this.game.physics.startSystem(Phaser.Physics.ARCADE)
 
-    this.PLAYER_SPEED = 200
     this.BULLET_SPEED = -1000
 
     this.numLevels = 3
@@ -24,13 +24,7 @@ export default class extends Phaser.State {
     this.background = this.add.tileSprite(0, 0, this.game.world.width, this.game.world.height, 'space')
     this.background.autoScroll(0, 30)
 
-    this.player = this.add.sprite(this.game.world.centerX, this.game.world.height - 50, 'player')
-    this.player.scale.setTo(0.6)
-    this.player.anchor.setTo(0.5)
-    this.game.physics.arcade.enable(this.player)
-    this.player.body.collideWorldBounds = true
-    this.player.customParams = {shield: false}
-
+    this.player = new Player(this.game, this.game.world.centerX, this.game.world.height - 50, 'player')
     this.initBullets()
     this.shootingTimer = this.game.time.events.loop(Phaser.Timer.SECOND / 5, this.createPlayerBullet, this)
     this.initEnemies()
@@ -69,23 +63,18 @@ export default class extends Phaser.State {
   }
 
   update () {
-    // console.log(this.bonusItems);
     this.game.physics.arcade.overlap(this.playerBullets, this.enemies, this.damageEnemy, null, this)
-    this.game.physics.arcade.overlap(this.enemyBullets, this.player, this.killPlayer, null, this)
-    this.game.physics.arcade.overlap(this.enemies, this.player, this.killPlayer, null, this)
+    this.game.physics.arcade.overlap(this.enemyBullets, this.player, this.damagePlayer, null, this)
+    this.game.physics.arcade.overlap(this.enemies, this.player, this.damagePlayer, null, this)
     this.game.physics.arcade.overlap(this.bonusItems, this.player, this.activateBonusItem, null, this)
-
-    this.player.body.velocity.x = 0
 
     if (this.player.customParams.shield) {
       this.shield.x = this.player.x
       this.shield.y = this.player.y
     }
-
-    if (this.game.input.activePointer.isDown) {
-      let targetX = this.game.input.activePointer.position.x
-      let direction = targetX >= this.game.world.centerX ? 1 : -1
-      this.player.body.velocity.x = direction * this.PLAYER_SPEED
+    if (this.player.health <= 0) {
+      this.lose.play()
+      this.restart()
     }
   }
 
@@ -152,9 +141,12 @@ export default class extends Phaser.State {
     bullet.kill()
   }
 
-  killPlayer () {
-    this.player.kill()
-    this.lose.play()
+  damagePlayer (player, bulletOrEnemy) {
+    bulletOrEnemy.kill()
+    player.damage(1)
+  }
+
+  restart () {
     this.game.state.start('Game')
   }
 
