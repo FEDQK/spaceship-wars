@@ -17,6 +17,7 @@ export default class extends Phaser.State {
     this.load.image('space', 'assets/images/space.png')
     this.load.image('player', 'assets/images/player.png')
     this.load.image('bullet', 'assets/images/bullet.png')
+    this.load.image('enemyBullet', 'assets/images/enemy-bullet.png')
     this.load.image('enemyParticle', 'assets/images/enemyParticle.png')
     this.load.image('bonusShield', 'assets/images/bonus-shield.png')
     this.load.spritesheet('enemy1', 'assets/images/enemy1.png', 93, 84, 3)

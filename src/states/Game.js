@@ -5,6 +5,8 @@ import Enemy from '../prefabs/Enemy'
 import BonusItem from '../prefabs/BonusItem'
 import Player from '../prefabs/Player'
 import Shield from '../prefabs/bonusItems/Shield'
+import Score from '../service/Score'
+import ScoreCounter from '../gui/ScoreCounter'
 import Mushroom from '../sprites/Mushroom'
 
 export default class extends Phaser.State {
@@ -13,6 +15,7 @@ export default class extends Phaser.State {
     this.game.physics.startSystem(Phaser.Physics.ARCADE)
 
     this.BULLET_SPEED = -1000
+    // this.score = new Score()
 
     this.numLevels = 3
     this.currentLevel = currentLevel || 1

@@ -60,7 +60,7 @@ export default class extends Phaser.Sprite {
         game: this.game,
         x: this.x,
         y: this.bottom,
-        asset: 'bullet'
+        asset: 'enemyBullet'
       })
       this.enemyBullets.add(bullet)
     } else {
