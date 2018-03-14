@@ -6,13 +6,13 @@ export default class Score {
     this.updateScore = new Phaser.Signal()
   }
 
-  set score (val) {
+  set currentScore (val) {
     this.score = val
     this.updateScore.dispatch()
     return this.score
   }
 
-  get score () {
+  get currentScore () {
     return this.score
   }
 }

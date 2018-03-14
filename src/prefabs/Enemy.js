@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import EnemyBullet from '../prefabs/EnemyBullet'
+import Service from '../service'
 
 export default class extends Phaser.Sprite {
   constructor ({ game, x, y, asset, health, enemyBullets }) {
@@ -10,6 +11,9 @@ export default class extends Phaser.Sprite {
     this.anchor.setTo(0.5)
     this.animations.add('getHit', [0, 1, 2, 1, 0], 25, false)
     this.health = health
+    this.scoreValue = this.health * 10
+
+    this.score = Service.get('Score')
 
     this.BULLET_SPEED = 100
     this.enemyBullets = enemyBullets
@@ -44,6 +48,7 @@ export default class extends Phaser.Sprite {
       emitter.gravity = 0
       emitter.start(true, 500, null, 100)
 
+      this.score.currentScore += this.scoreValue
       this.enemyTimer.pause()
     }
   }

@@ -5,7 +5,7 @@ import Enemy from '../prefabs/Enemy'
 import BonusItem from '../prefabs/BonusItem'
 import Player from '../prefabs/Player'
 import Shield from '../prefabs/bonusItems/Shield'
-import Score from '../service/Score'
+import Service from '../service'
 import ScoreCounter from '../gui/ScoreCounter'
 import Mushroom from '../sprites/Mushroom'
 
@@ -15,7 +15,8 @@ export default class extends Phaser.State {
     this.game.physics.startSystem(Phaser.Physics.ARCADE)
 
     this.BULLET_SPEED = -1000
-    // this.score = new Score()
+    this.score = Service.get('Score')
+    this.score.currentScore = 0
 
     this.numLevels = 3
     this.currentLevel = currentLevel || 1
@@ -42,6 +43,7 @@ export default class extends Phaser.State {
     if (!this.music.isPlaying) {
       this.music.play()
     }
+    this.createScoreLabel()
     // this.createShield()
     this.initBonusItems()
     this.createBonusItem(300, 700)
@@ -207,6 +209,11 @@ export default class extends Phaser.State {
         this.scheduleNextEnemy()
       }, this)
     }
+  }
+
+  createScoreLabel () {
+    this.scoreLabel = new ScoreCounter(this.game, 100, 100)
+    this.add.existing(this.scoreLabel)
   }
 
   getRandom (min, max) {
