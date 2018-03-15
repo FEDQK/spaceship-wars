@@ -7,13 +7,13 @@ export default class ScoreCounter extends Phaser.Text {
       fill: '#fff',
       font: '40px Bangers'
     }
-    super(game, x, y, '0', style)
+    super(game, x, y, '0 ', style)
 
     this.score = Service.get('Score')
     this.score.updateScore.add(this.updateScoreCount, this)
   }
 
   updateScoreCount () {
-    this.text = `${this.score.currentScore}`
+    this.text = `${this.score.currentScore} `
   }
 }
