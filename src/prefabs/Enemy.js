@@ -2,7 +2,7 @@ import Phaser from 'phaser'
 import EnemyBullet from '../prefabs/EnemyBullet'
 import Service from '../service'
 
-export default class extends Phaser.Sprite {
+export default class Enemy extends Phaser.Sprite {
   constructor ({ game, x, y, asset, health, enemyBullets }) {
     super(game, x, y, asset)
     this.game = game

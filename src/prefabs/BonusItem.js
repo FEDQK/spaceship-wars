@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 const BONUS_ITEM_SPEED = 100
 
-export default class extends Phaser.Sprite {
+export default class BonusItem extends Phaser.Sprite {
   constructor ({ game, x, y, asset, type }) {
     super(game, x, y, asset)
     game.physics.arcade.enable(this)
