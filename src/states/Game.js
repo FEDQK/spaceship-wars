@@ -14,7 +14,6 @@ export default class extends Phaser.State {
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
     this.game.physics.startSystem(Phaser.Physics.ARCADE)
 
-    this.BULLET_SPEED = -1000
     this.score = Service.get('Score')
     this.score.currentScore = 0
 
@@ -27,10 +26,9 @@ export default class extends Phaser.State {
   create () {
     this.background = this.add.tileSprite(0, 0, this.game.world.width, this.game.world.height, 'space')
     this.background.autoScroll(0, 30)
-
-    this.player = new Player(this.game, this.game.world.centerX, this.game.world.height - 50, 'player')
+    
     this.initBullets()
-    this.shootingTimer = this.game.time.events.loop(Phaser.Timer.SECOND / 5, this.createPlayerBullet, this)
+    this.player = new Player(this.game, this.game.world.centerX, this.game.world.height - 50, 'player', this.playerBullets)
     this.initEnemies()
 
     this.loadLevel()
@@ -92,22 +90,6 @@ export default class extends Phaser.State {
   initBullets () {
     this.playerBullets = this.add.group()
     this.playerBullets.enableBody = true
-  }
-
-  createPlayerBullet () {
-    let bullet = this.playerBullets.getFirstExists(false)
-    if (!bullet) {
-      bullet = new PlayerBullet({
-        game: this.game,
-        x: this.player.x,
-        y: this.player.top,
-        asset: 'bullet'
-      })
-      this.playerBullets.add(bullet)
-    } else {
-      bullet.reset(this.player.x, this.player.top)
-    }
-    bullet.body.velocity.y = this.BULLET_SPEED
   }
 
   initBonusItems () {
