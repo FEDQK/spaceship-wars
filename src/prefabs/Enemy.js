@@ -20,6 +20,7 @@ export default class extends Phaser.Sprite {
     this.enemyTimer = this.game.time.create(false)
     this.enemyTimer.start()
     this.scheduleShooting()
+    this.createSound()
   }
 
   update () {
@@ -39,6 +40,7 @@ export default class extends Phaser.Sprite {
   damage (amount) {
     super.damage(amount)
     this.play('getHit')
+    this.zap.play()
 
     if (this.health <= 0) {
       const lifespan = 500
@@ -58,6 +60,10 @@ export default class extends Phaser.Sprite {
   scheduleShooting () {
     this.shoot()
     this.enemyTimer.add(Phaser.Timer.SECOND * 2, this.scheduleShooting, this)
+  }
+
+  createSound () {
+    this.zap = this.game.sound.add('zap', 0.1)
   }
 
   shoot () {

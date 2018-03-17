@@ -8,6 +8,14 @@ export default class extends Phaser.Sprite {
     this.scale.setTo(0.6)
     this.anchor.setTo(0.5)
     this.play('createShield')
+    this.createSounds()
+
     this.game.add.existing(this)
+  }
+
+  createSounds () {
+    const volume = 0.1
+    this.shieldUp = this.game.sound.add('shieldUp', volume)
+    this.shieldDown = this.game.sound.add('shieldDown', volume)
   }
 }

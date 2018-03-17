@@ -32,12 +32,7 @@ export default class extends Phaser.State {
     this.initEnemies()
 
     this.loadLevel()
-    this.zap = this.add.audio('zap')
-    this.lose = this.add.audio('lose')
-    this.music = this.add.audio('music')
-    this.shieldUp = this.add.audio('shieldUp')
-    this.shieldDown = this.add.audio('shieldDown')
-    this.music.volume = this.zap.volume = this.shieldUp.volume = this.shieldDown.volume = 0.1
+    this.music = this.game.sound.add('music', 0.1)
     if (!this.music.isPlaying) {
       this.music.play()
     }
@@ -76,7 +71,6 @@ export default class extends Phaser.State {
       this.shield.y = this.player.y
     }
     if (this.player.health <= 0) {
-      this.lose.play()
       this.restart()
     }
   }
@@ -109,8 +103,8 @@ export default class extends Phaser.State {
 
   createShield () {
     this.player.customParams.shield = true
-    this.shieldUp.play()
     this.shield = new Shield(this.game, this.player.x, this.player.y, 'shield')
+    this.shield.shieldUp.play()
   }
 
   initEnemies () {
@@ -123,7 +117,6 @@ export default class extends Phaser.State {
 
   damageEnemy (bullet, enemy) {
     // this.createBonusItem(enemy.x, enemy.y)
-    this.zap.play()
     enemy.damage(1)
     bullet.kill()
   }

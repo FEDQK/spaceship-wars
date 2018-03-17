@@ -13,10 +13,13 @@ export default class extends Phaser.Sprite {
     this.customParams = {shield: false}
     this.health = 3
     this.PLAYER_SPEED = 200
-    this.BULLET_SPEED = -1000    
+    this.BULLET_SPEED = -1000
+    
     this.playerTimer = this.game.time.create(false)
     this.playerTimer.start()
+
     this.scheduleShooting()
+    this.createSound()
 
     this.game.add.existing(this)
   }
@@ -30,10 +33,15 @@ export default class extends Phaser.Sprite {
     }
   }
 
+  createSound () {
+    this.lose = this.game.sound.add('lose')
+  }
+
   damage (amount) {
     super.damage(amount)
     if (this.health <= 0) {
       this.kill()
+      this.lose.play()
       this.playerTimer.pause()
     }
   }
