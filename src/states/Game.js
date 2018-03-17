@@ -1,15 +1,14 @@
 /* globals __DEV__ */
 import Phaser from 'phaser'
-import PlayerBullet from '../prefabs/PlayerBullet'
 import Enemy from '../prefabs/Enemy'
 import BonusItem from '../prefabs/BonusItem'
 import Player from '../prefabs/Player'
 import Shield from '../prefabs/bonusItems/Shield'
 import Service from '../service'
 import ScoreCounter from '../gui/ScoreCounter'
-import Mushroom from '../sprites/Mushroom'
+import HealthPlayer from '../gui/HealthPlayer'
 
-export default class extends Phaser.State {
+export default class Game extends Phaser.State {
   init (currentLevel) {
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
     this.game.physics.startSystem(Phaser.Physics.ARCADE)
@@ -29,6 +28,7 @@ export default class extends Phaser.State {
     
     this.initBullets()
     this.player = new Player(this.game, this.game.world.centerX, this.game.world.height - 50, 'player', this.playerBullets)
+    this.createHealthLabel()
     this.initEnemies()
 
     this.loadLevel()
@@ -62,8 +62,8 @@ export default class extends Phaser.State {
 
   update () {
     this.game.physics.arcade.overlap(this.playerBullets, this.enemies, this.damageEnemy, null, this)
-    this.game.physics.arcade.overlap(this.enemyBullets, this.player, this.damagePlayer, null, this)
-    this.game.physics.arcade.overlap(this.enemies, this.player, this.damagePlayer, null, this)
+    this.game.physics.arcade.overlap(this.enemyBullets, [this.shield, this.player], this.damagePlayer, null, this)
+    this.game.physics.arcade.overlap(this.enemies, [this.shield, this.player], this.damagePlayer, null, this)
     this.game.physics.arcade.overlap(this.bonusItems, this.player, this.activateBonusItem, null, this)
 
     if (this.player.customParams.shield) {
@@ -189,6 +189,15 @@ export default class extends Phaser.State {
   createScoreLabel () {
     this.scoreLabel = new ScoreCounter(this.game, 100, 100)
     this.add.existing(this.scoreLabel)
+  }
+
+  createHealthLabel () {
+    this.healthPlayer = new HealthPlayer(
+      this.game,
+      this.game.width - (this.game.width / 12),
+      this.game.height - (this.game.height / 12),
+      this.player)
+    this.add.existing(this.healthPlayer)
   }
 
   getRandom (min, max) {

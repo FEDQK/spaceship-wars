@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 import PlayerBullet from './PlayerBullet'
 
-export default class extends Phaser.Sprite {
+export default class Player extends Phaser.Sprite {
   constructor (game, x, y, asset, playerBullets) {
     super(game, x, y, asset)
     this.game = game
@@ -14,7 +14,8 @@ export default class extends Phaser.Sprite {
     this.health = 3
     this.PLAYER_SPEED = 200
     this.BULLET_SPEED = -1000
-    
+    this.updateHealth = new Phaser.Signal()
+
     this.playerTimer = this.game.time.create(false)
     this.playerTimer.start()
 
@@ -22,6 +23,16 @@ export default class extends Phaser.Sprite {
     this.createSound()
 
     this.game.add.existing(this)
+  }
+
+  set currentHealth (val) {
+    this.health = val
+    this.updateHealth.dispatch()
+    return this.health
+  }
+
+  get currentHealth () {
+    return this.health
   }
 
   update () {
@@ -39,6 +50,7 @@ export default class extends Phaser.Sprite {
 
   damage (amount) {
     super.damage(amount)
+    this.currentHealth = this.health
     if (this.health <= 0) {
       this.kill()
       this.lose.play()

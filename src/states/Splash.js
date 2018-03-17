@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 import { centerGameObjects } from '../utils'
 
-export default class extends Phaser.State {
+export default class Splash extends Phaser.State {
   init () {}
 
   preload () {
@@ -20,6 +20,8 @@ export default class extends Phaser.State {
     this.load.image('enemyBullet', 'assets/images/enemy-bullet.png')
     this.load.image('enemyParticle', 'assets/images/enemyParticle.png')
     this.load.image('bonusShield', 'assets/images/bonus-shield.png')
+    this.load.image('playerLife', 'assets/images/player-life.png')
+    this.load.image('numeralX', 'assets/images/numeralX.png')
     this.load.spritesheet('enemy1', 'assets/images/enemy1.png', 93, 84, 3)
     this.load.spritesheet('enemy2', 'assets/images/enemy2.png', 104, 84, 3)
     this.load.spritesheet('enemy3', 'assets/images/enemy3.png', 103, 84, 3)
