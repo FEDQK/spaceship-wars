@@ -25,9 +25,8 @@ export default class Game extends Phaser.State {
   create () {
     this.background = this.add.tileSprite(0, 0, this.game.world.width, this.game.world.height, 'space')
     this.background.autoScroll(0, 30)
-    
-    this.initBullets()
-    this.player = new Player(this.game, this.game.world.centerX, this.game.world.height - 50, 'player', this.playerBullets)
+
+    this.player = new Player(this.game, this.game.world.centerX, this.game.world.height - 50, 'player')
     this.createHealthLabel()
     this.initEnemies()
 
@@ -61,7 +60,7 @@ export default class Game extends Phaser.State {
   }
 
   update () {
-    this.game.physics.arcade.overlap(this.playerBullets, this.enemies, this.damageEnemy, null, this)
+    this.game.physics.arcade.overlap(this.player.playerBullets, this.enemies, this.damageEnemy, null, this)
     this.game.physics.arcade.overlap(this.enemyBullets, [this.shield, this.player], this.damagePlayer, null, this)
     this.game.physics.arcade.overlap(this.enemies, [this.shield, this.player], this.damagePlayer, null, this)
     this.game.physics.arcade.overlap(this.bonusItems, this.player, this.activateBonusItem, null, this)
@@ -79,11 +78,6 @@ export default class Game extends Phaser.State {
     // if (__DEV__) {
     //   this.game.debug.spriteInfo(this.bonusItems, 32, 32)
     // }
-  }
-
-  initBullets () {
-    this.playerBullets = this.add.group()
-    this.playerBullets.enableBody = true
   }
 
   initBonusItems () {

@@ -1,11 +1,11 @@
 import Phaser from 'phaser'
-import PlayerBullet from './PlayerBullet'
+import BulletGenerator from '../generators/Bullet'
 
 export default class Player extends Phaser.Sprite {
-  constructor (game, x, y, asset, playerBullets) {
+  constructor (game, x, y, asset) {
     super(game, x, y, asset)
     this.game = game
-    this.playerBullets = playerBullets
+    this.playerBullets = null
     this.scale.setTo(0.6)
     this.anchor.setTo(0.5)
     this.game.physics.arcade.enable(this)
@@ -15,11 +15,8 @@ export default class Player extends Phaser.Sprite {
     this.PLAYER_SPEED = 200
     this.BULLET_SPEED = -1000
     this.updateHealth = new Phaser.Signal()
+    this.playerBullets = new BulletGenerator(this.game, this, 'bullet', this.BULLET_SPEED, 5)
 
-    this.playerTimer = this.game.time.create(false)
-    this.playerTimer.start()
-
-    this.scheduleShooting()
     this.createSound()
 
     this.game.add.existing(this)
@@ -65,28 +62,7 @@ export default class Player extends Phaser.Sprite {
     if (this.health <= 0) {
       this.kill()
       this.lose.play()
-      this.playerTimer.pause()
+      this.playerBullets.bulletTimer.pause()
     }
-  }
-
-  scheduleShooting () {
-    this.shoot()
-    this.playerTimer.add(Phaser.Timer.SECOND / 5, this.scheduleShooting, this)
-  }
-
-  shoot () {
-    let bullet = this.playerBullets.getFirstExists(false)
-    if (!bullet) {
-      bullet = new PlayerBullet({
-        game: this.game,
-        x: this.x,
-        y: this.top,
-        asset: 'bullet'
-      })
-      this.playerBullets.add(bullet)
-    } else {
-      bullet.reset(this.x, this.top)
-    }
-    bullet.body.velocity.y = this.BULLET_SPEED
   }
 }
