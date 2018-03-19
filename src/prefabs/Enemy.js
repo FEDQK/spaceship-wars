@@ -1,12 +1,12 @@
 import Phaser from 'phaser'
-import EnemyBullet from '../prefabs/EnemyBullet'
+import BulletGenerator from '../generators/Bullet'
 import Service from '../service'
 
 export default class Enemy extends Phaser.Sprite {
-  constructor ({ game, x, y, asset, health, enemyBullets }) {
+  constructor ({ game, x, y, asset, health }) {
     super(game, x, y, asset)
     this.game = game
-    // this.game.physics.arcade.enable(this)
+    this.game.physics.arcade.enable(this)
 
     this.anchor.setTo(0.5)
     this.animations.add('getHit', [0, 1, 2, 1, 0], 25, false)
@@ -16,10 +16,7 @@ export default class Enemy extends Phaser.Sprite {
     this.score = Service.get('Score')
 
     this.BULLET_SPEED = 100
-    this.enemyBullets = enemyBullets
-    this.enemyTimer = this.game.time.create(false)
-    this.enemyTimer.start()
-    this.scheduleShooting()
+    this.enemyBullets = new BulletGenerator(this.game, this, 'bottom', 'enemyBullet', this.BULLET_SPEED, 0.5, true)
     this.createSound()
   }
 
@@ -53,33 +50,17 @@ export default class Enemy extends Phaser.Sprite {
       emitter.start(true, lifespan, null, 100)
 
       this.score.currentScore += this.scoreValue
-      this.enemyTimer.pause()
+      this.enemyBullets.bulletTimer.pause()
     }
   }
 
-  scheduleShooting () {
-    this.shoot()
-    this.enemyTimer.add(Phaser.Timer.SECOND * 2, this.scheduleShooting, this)
+  kill () {
+    super.kill()
+    this.enemyBullets.bulletTimer.pause()
   }
 
   createSound () {
     this.zap = this.game.sound.add('zap', 0.1)
-  }
-
-  shoot () {
-    let bullet = this.enemyBullets.getFirstExists(false)
-    if (!bullet) {
-      bullet = new EnemyBullet({
-        game: this.game,
-        x: this.x,
-        y: this.bottom,
-        asset: 'enemyBullet'
-      })
-      this.enemyBullets.add(bullet)
-    } else {
-      bullet.reset(this.x, this.bottom)
-    }
-    bullet.body.velocity.y = this.BULLET_SPEED
   }
 
   reset (x, y, health, key, scale, speedX, speedY) {
@@ -88,6 +69,6 @@ export default class Enemy extends Phaser.Sprite {
     this.scale.setTo(scale)
     this.body.velocity.x = speedX
     this.body.velocity.y = speedY
-    this.enemyTimer.resume()
+    this.enemyBullets.bulletTimer.resume()
   }
 }

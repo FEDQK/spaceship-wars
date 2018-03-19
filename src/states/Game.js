@@ -1,4 +1,3 @@
-/* globals __DEV__ */
 import Phaser from 'phaser'
 import Enemy from '../prefabs/Enemy'
 import BonusItem from '../prefabs/BonusItem'
@@ -61,7 +60,9 @@ export default class Game extends Phaser.State {
 
   update () {
     this.game.physics.arcade.overlap(this.player.playerBullets, this.enemies, this.damageEnemy, null, this)
-    this.game.physics.arcade.overlap(this.enemyBullets, [this.shield, this.player], this.damagePlayer, null, this)
+    this.enemies.children.forEach((enemy) => {
+      this.game.physics.arcade.overlap(enemy.enemyBullets, [this.shield, this.player], this.damagePlayer, null, this)
+    })
     this.game.physics.arcade.overlap(this.enemies, [this.shield, this.player], this.damagePlayer, null, this)
     this.game.physics.arcade.overlap(this.bonusItems, this.player, this.activateBonusItem, null, this)
 
@@ -104,9 +105,6 @@ export default class Game extends Phaser.State {
   initEnemies () {
     this.enemies = this.add.group()
     this.enemies.enableBody = true
-
-    this.enemyBullets = this.add.group()
-    this.enemyBullets.enableBody = true
   }
 
   damageEnemy (bullet, enemy) {
@@ -138,8 +136,7 @@ export default class Game extends Phaser.State {
         x: x,
         y: y,
         asset: key,
-        health: health,
-        enemyBullets: this.enemyBullets
+        health: health
       })
       this.enemies.add(enemy)
     }

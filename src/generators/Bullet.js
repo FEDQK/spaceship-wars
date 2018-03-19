@@ -2,10 +2,12 @@ import Phaser from 'phaser'
 import Bullet from '../prefabs/Bullet'
 
 export default class BulletGenerator extends Phaser.Group {
-  constructor (game, sprite, assetName, bulletSpeed, timeCreate) {
+  constructor (game, sprite, side, assetName, bulletSpeed, timeCreate, isEnemy = false) {
     super(game, undefined, 'bulletGenerator', false, true)
     this.game = game
     this.sprite = sprite
+    this.side = side
+    this.isEnemy = isEnemy
     this.assetName = assetName
     this.timeCreate = timeCreate
     this.bulletSpeed = bulletSpeed
@@ -17,10 +19,10 @@ export default class BulletGenerator extends Phaser.Group {
   generate () {
     let bullet = this.getFirstExists(false)
     if (!bullet) {
-      bullet = new Bullet(this.game, this.sprite.x, this.sprite.top, this.assetName, false)
+      bullet = new Bullet(this.game, this.sprite.x, this.sprite[this.side], this.assetName, this.isEnemy)
       this.add(bullet)
     } else {
-      bullet.reset(this.sprite.x, this.sprite.top)
+      bullet.reset(this.sprite.x, this.sprite[this.side])
     }
     bullet.body.velocity.y = this.bulletSpeed
   }

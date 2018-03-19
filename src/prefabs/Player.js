@@ -15,7 +15,7 @@ export default class Player extends Phaser.Sprite {
     this.PLAYER_SPEED = 200
     this.BULLET_SPEED = -1000
     this.updateHealth = new Phaser.Signal()
-    this.playerBullets = new BulletGenerator(this.game, this, 'bullet', this.BULLET_SPEED, 5)
+    this.playerBullets = new BulletGenerator(this.game, this, 'top', 'bullet', this.BULLET_SPEED, 5)
 
     this.createSound()
 
