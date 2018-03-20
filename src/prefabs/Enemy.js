@@ -3,7 +3,7 @@ import BulletGenerator from '../generators/Bullet'
 import Service from '../service'
 
 export default class Enemy extends Phaser.Sprite {
-  constructor ({ game, x, y, asset, health }) {
+  constructor (game, x, y, asset, health) {
     super(game, x, y, asset)
     this.game = game
     this.game.physics.arcade.enable(this)

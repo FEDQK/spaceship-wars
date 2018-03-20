@@ -1,11 +1,11 @@
 import Phaser from 'phaser'
-import Enemy from '../prefabs/Enemy'
 import BonusItem from '../prefabs/BonusItem'
 import Player from '../prefabs/Player'
 import Shield from '../prefabs/bonusItems/Shield'
 import Service from '../service'
 import ScoreCounter from '../gui/ScoreCounter'
 import HealthPlayer from '../gui/HealthPlayer'
+import EnemyGenerator from '../generators/Enemy'
 
 export default class Game extends Phaser.State {
   init (currentLevel) {
@@ -27,7 +27,6 @@ export default class Game extends Phaser.State {
 
     this.player = new Player(this.game, this.game.world.centerX, this.game.world.height - 50, 'player')
     this.createHealthLabel()
-    this.initEnemies()
 
     this.loadLevel()
     this.music = this.game.sound.add('music', 0.1)
@@ -58,7 +57,7 @@ export default class Game extends Phaser.State {
     // this.game.add.existing(this.mushroom)
   }
 
-  update () {
+  update () {    
     this.game.physics.arcade.overlap(this.player.playerBullets, this.enemies, this.damageEnemy, null, this)
     this.enemies.children.forEach((enemy) => {
       this.game.physics.arcade.overlap(enemy.enemyBullets, [this.shield, this.player], this.damagePlayer, null, this)
@@ -103,8 +102,7 @@ export default class Game extends Phaser.State {
   }
 
   initEnemies () {
-    this.enemies = this.add.group()
-    this.enemies.enableBody = true
+    this.enemies = new EnemyGenerator(this.game, this.levelData.enemies, this.currentEnemyIndex)
   }
 
   damageEnemy (bullet, enemy) {
@@ -127,22 +125,6 @@ export default class Game extends Phaser.State {
     bonusItem.kill()
   }
 
-  createEnemy (_x, y, health, key, scale, speedX, speedY) {
-    let enemy = this.enemies.getFirstExists(false)
-    let x = this.getRandom(0, this.game.world.width)
-    if (!enemy) {
-      enemy = new Enemy({
-        game: this.game,
-        x: x,
-        y: y,
-        asset: key,
-        health: health
-      })
-      this.enemies.add(enemy)
-    }
-    enemy.reset(x, y, health, key, scale, speedX, speedY)
-  }
-
   loadLevel () {
     this.currentEnemyIndex = 0
     this.levelData = JSON.parse(this.game.cache.getText('level' + this.currentLevel))
@@ -155,26 +137,7 @@ export default class Game extends Phaser.State {
       }
       this.game.state.start('Game', true, false, this.currentLevel)
     }, this)
-    this.scheduleNextEnemy()
-  }
-
-  scheduleNextEnemy () {
-    let nextEnemy = this.levelData.enemies[this.currentEnemyIndex]
-    if (nextEnemy) {
-      let nextTime = 1000 * (nextEnemy.time - (this.currentEnemyIndex === 0 ? 0 : this.levelData.enemies[this.currentEnemyIndex - 1].time))
-      this.nextEnemyTime = this.game.time.events.add(nextTime, function () {
-        this.createEnemy(
-          nextEnemy.x * this.game.world.width,
-          -150,
-          nextEnemy.health,
-          nextEnemy.key,
-          nextEnemy.scale,
-          nextEnemy.speedX,
-          nextEnemy.speedY)
-        this.currentEnemyIndex++
-        this.scheduleNextEnemy()
-      }, this)
-    }
+    this.initEnemies()
   }
 
   createScoreLabel () {
@@ -189,9 +152,5 @@ export default class Game extends Phaser.State {
       this.game.height - (this.game.height / 12),
       this.player)
     this.add.existing(this.healthPlayer)
-  }
-
-  getRandom (min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min
   }
 }
