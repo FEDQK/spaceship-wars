@@ -20,6 +20,7 @@ export default class Splash extends Phaser.State {
     this.load.image('enemyBullet', 'assets/images/enemy-bullet.png')
     this.load.image('enemyParticle', 'assets/images/enemyParticle.png')
     this.load.image('bonusShield', 'assets/images/bonus-shield.png')
+    this.load.image('tripleShot', 'assets/images/triple-shot.png')
     this.load.image('playerLife', 'assets/images/player-life.png')
     this.load.image('numeralX', 'assets/images/numeralX.png')
     this.load.spritesheet('enemy1', 'assets/images/enemy1.png', 93, 84, 3)

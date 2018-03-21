@@ -1,11 +1,11 @@
 import Phaser from 'phaser'
-import BonusItem from '../prefabs/BonusItem'
 import Player from '../prefabs/Player'
 import Shield from '../prefabs/bonusItems/Shield'
 import Service from '../service'
 import ScoreCounter from '../gui/ScoreCounter'
 import HealthPlayer from '../gui/HealthPlayer'
 import EnemyGenerator from '../generators/Enemy'
+import BonusItemGenerator from '../generators/BonusItem'
 
 export default class Game extends Phaser.State {
   init (currentLevel) {
@@ -36,7 +36,6 @@ export default class Game extends Phaser.State {
     this.createScoreLabel()
     // this.createShield()
     this.initBonusItems()
-    this.createBonusItem(300, 700)
     // const bannerText = 'Phaser + ES6 + Webpack'
     // let banner = this.add.text(this.world.centerX, this.game.height - 80, bannerText, {
     //   font: '40px Bangers',
@@ -57,7 +56,7 @@ export default class Game extends Phaser.State {
     // this.game.add.existing(this.mushroom)
   }
 
-  update () {    
+  update () {
     this.game.physics.arcade.overlap(this.player.playerBullets, this.enemies, this.damageEnemy, null, this)
     this.enemies.children.forEach((enemy) => {
       this.game.physics.arcade.overlap(enemy.enemyBullets, [this.shield, this.player], this.damagePlayer, null, this)
@@ -81,18 +80,9 @@ export default class Game extends Phaser.State {
   }
 
   initBonusItems () {
-    this.bonusItems = this.add.group()
-    this.bonusItems.enableBody = true
-  }
-
-  createBonusItem (x, y) {
-    let bonusItem = new BonusItem({
-      game: this.game,
-      x: x,
-      y: y,
-      asset: 'bonusShield'
-    })
-    this.bonusItems.add(bonusItem)
+    this.bonusItems = new BonusItemGenerator(this.game)
+    this.bonusItems.generate(300, 700)
+    // this.bonusItems.add(bonusItem)
   }
 
   createShield () {
@@ -106,7 +96,7 @@ export default class Game extends Phaser.State {
   }
 
   damageEnemy (bullet, enemy) {
-    // this.createBonusItem(enemy.x, enemy.y)
+    // this.initBonusItems(enemy.x, enemy.y)
     enemy.damage(1)
     bullet.kill()
   }
